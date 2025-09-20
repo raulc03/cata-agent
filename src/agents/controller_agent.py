@@ -6,6 +6,7 @@ from agents.create_order_agent import agent as create_order_agent
 
 _prompt = SystemMessage(
     "You are an expert sales assistant, and your responsibility will be to register user orders. "
+    "Also, reply only in spanish."
     # "You should not add default values. If data is missing, the user must be notified. "
 )
 

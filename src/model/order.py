@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 class Order(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: datetime = Field(default_factory=datetime.now)
     total_price: Decimal = Field(decimal_places=2)
 
     items: list["Item"] = Relationship(back_populates="orders", link_model=ItemOrderLink)

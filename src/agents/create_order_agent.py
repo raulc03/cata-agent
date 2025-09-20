@@ -4,14 +4,12 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.tools import tool
 from langchain.chat_models import init_chat_model
 from sqlmodel import Session, select
+from decimal import Decimal
 
 from model.item import Item, ItemAgent
-from model.order import OrderAgent
+from model.order import Order
 from config.database import engine
 
-from dotenv import load_dotenv
-
-load_dotenv()
 
 _model = init_chat_model(
     model="anthropic:claude-3-5-haiku-latest", temperature=0.5, api_key=os.getenv("API_KEY", "")
@@ -30,7 +28,7 @@ def create_items(
     item_name: str | None, item_size: str | None, item_color: str | None
 ) -> ItemAgent | str:
     """
-    Use to validate that all require attributes from one item.
+    Use to validate that all require attributes from one item before create an order.
     """
     if item_name and item_size and item_color:
         return ItemAgent(name=item_name, size=item_size, color=item_color)
@@ -39,18 +37,35 @@ def create_items(
 
 
 @tool
-def find_items(items: list[ItemAgent]):
+def get_correct_values() -> dict[str, list]:
     """
-    Use to find the items in the database in order to know if exists.
-    If one item doesn't exists, the order
+    Use to find out the values of the attributes
+    that should replace those provided by the user before creating the order.
     """
-    bd_items = []
+    result = {"name": [], "size": [], "color": []}
+    with Session(engine) as session:
+        stmt = select(Item.name).distinct()
+        result["name"] = list(session.exec(stmt).all())
+        stmt = select(Item.size).distinct()
+        result["size"] = list(session.exec(stmt).all())
+        stmt = select(Item.color).distinct()
+        result["color"] = list(session.exec(stmt).all())
+
+    return result
+
+
+@tool
+def create_order(items: list[ItemAgent]) -> Order | str:
+    """
+    Use to search the items in database and create the order with them.
+    If one item is not found, that item will be returned with a message.
+    """
+    bd_items: list[Item] = []
     with Session(engine) as session:
         for item in items:
-            # TODO: Agregar la búsqueda mediante 'ilike'
-            stmt = select(Item).where(Item.name == item.name)
-            stmt = stmt.where(Item.size == item.size)
-            stmt = stmt.where(Item.color == item.color)
+            stmt = select(Item).where(Item.name.ilike(item.name))  # type:ignore
+            stmt = stmt.where(Item.size.ilike(item.size))  # type:ignore
+            stmt = stmt.where(Item.color.ilike(item.color))  # type:ignore
 
             result = session.exec(stmt).first()
 
@@ -58,20 +73,25 @@ def find_items(items: list[ItemAgent]):
                 bd_items.append(result)
             else:
                 bd_items.clear()
-                break
+                return f"This item was not found: {item}"
 
-    # TODO: En caso un item falle, retornarlo como fallido para que se le haga saber al usuario
-    if bd_items:
-        return bd_items
-    else:
-        return "This item was not found"
+        if bd_items:
+            total = sum([item.price for item in bd_items])
+            if total == 0:
+                total = Decimal(total)
+            order = Order(items=bd_items, total_price=total)
+            session.add(order)
+            session.commit()
+            session.refresh(order)
+            return order
+    return "There's no items"
 
 
 ############################# tools ##################################
 
-_tool_node = ToolNode(tools=[create_items])
+_tool_node = ToolNode(tools=[create_items, get_correct_values, create_order])
 
-sub_agent = create_agent(model=_model, tools=_tool_node, response_format=OrderAgent, prompt=_prompt)
+sub_agent = create_agent(model=_model, tools=_tool_node, response_format=Order, prompt=_prompt)
 
 
 @tool
