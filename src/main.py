@@ -1,10 +1,8 @@
 from pathlib import Path
 
-from langchain_core.messages import HumanMessage
-from agents.controller_agent import controller_agent
+from agents.conversation_handler import conversation_agent
 from config.database import create_db_and_table
 from util.seed import insert_items
-from workflows.work1 import call_workflow
 
 
 def main():
@@ -13,15 +11,13 @@ def main():
     if not existsDB:
         insert_items()
 
-    call_workflow()
+    response = conversation_agent.invoke(
+        {
+            "messages": ("user", input("Qué desea comprar: ")),
+        }
+    )
 
-    # response = controller_agent.invoke(
-    #     {
-    #         "messages": HumanMessage(input("Qué desea comprar: ")),
-    #     }
-    # )
-    #
-    # print(response["messages"][-1].content)
+    print(response["messages"][-1].content)
 
 
 if __name__ == "__main__":
