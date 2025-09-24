@@ -55,4 +55,4 @@ def query_refiner_agent(item_raw_query: str) -> str:
         {"messages": ("user", f"Item from the customer: {item_raw_query}")}
     )
 
-    return result["messages"][-1]
+    return result["messages"][-1].content

@@ -4,46 +4,110 @@ from sqlmodel import Session
 from config.database import engine
 from model.item import Item
 
-
-items_dict = [
-    {
-        "name": "B - Casaca",
-        "code": 1001,
-        "color": "Azul Marino",
-        "price": Decimal("29.99"),
-        "size": "M",
-        "catalog": "Ropa Casual",
-    },
-    {
-        "name": "B - Casaca",
-        "code": 1002,
-        "color": "Azul Marino",
-        "price": Decimal("29.99"),
-        "size": "S",
-        "catalog": "Ropa Casual",
-    },
-    {
-        "name": "B - Casaca",
-        "code": 1003,
-        "color": "Azul Marino",
-        "price": Decimal("29.99"),
-        "size": "L",
-        "catalog": "Ropa Casual",
-    },
-    {
-        "name": "B - Casaca",
-        "code": 1004,
-        "color": "Rojo Vino",
-        "price": Decimal("29.99"),
-        "size": "L",
-        "catalog": "Ropa Casual",
-    },
+items = [
+    # ---- CHALECO ----
+    Item(
+        name="Chaleco",
+        code=678807,
+        color="Beige",
+        price=Decimal("49.90"),
+        size="XS",
+        catalog="625635",
+    ),
+    Item(
+        name="Chaleco",
+        code=678808,
+        color="Beige",
+        price=Decimal("49.90"),
+        size="S",
+        catalog="625635",
+    ),
+    Item(
+        name="Chaleco",
+        code=678809,
+        color="Beige",
+        price=Decimal("49.90"),
+        size="M",
+        catalog="625635",
+    ),
+    Item(
+        name="Chaleco",
+        code=678810,
+        color="Beige",
+        price=Decimal("49.90"),
+        size="L",
+        catalog="625635",
+    ),
+    Item(
+        name="Chaleco",
+        code=678811,
+        color="Beige",
+        price=Decimal("49.90"),
+        size="XL",
+        catalog="625635",
+    ),
+    Item(
+        name="Chaleco",
+        code=678812,
+        color="Beige",
+        price=Decimal("49.90"),
+        size="XXL",
+        catalog="625635",
+    ),
+    # ---- PANTALÓN ----
+    Item(
+        name="Pantalón",
+        code=678904,
+        color="Beige",
+        price=Decimal("79.90"),
+        size="26",
+        catalog="625636",
+    ),
+    Item(
+        name="Pantalón",
+        code=678905,
+        color="Beige",
+        price=Decimal("79.90"),
+        size="28",
+        catalog="625636",
+    ),
+    Item(
+        name="Pantalón",
+        code=678906,
+        color="Beige",
+        price=Decimal("79.90"),
+        size="30",
+        catalog="625636",
+    ),
+    Item(
+        name="Pantalón",
+        code=678907,
+        color="Beige",
+        price=Decimal("79.90"),
+        size="32",
+        catalog="625636",
+    ),
+    Item(
+        name="Pantalón",
+        code=678908,
+        color="Beige",
+        price=Decimal("79.90"),
+        size="34",
+        catalog="625636",
+    ),
+    Item(
+        name="Pantalón",
+        code=678909,
+        color="Beige",
+        price=Decimal("79.90"),
+        size="36",
+        catalog="625636",
+    ),
 ]
 
 
 def insert_items():
     with Session(engine) as session:
-        for it in items_dict:
-            item = Item(**it)
-            session.add(item)
+        for it in items:
+            session.add(it)
         session.commit()

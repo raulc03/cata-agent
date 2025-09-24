@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, Field, Relationship
 from pydantic import BaseModel
 from typing import TYPE_CHECKING
 
-from model.item_order_link import ItemOrderLink
+# from model.item_order_link import ItemOrderLink
 
 if TYPE_CHECKING:
     from model.order import Order
@@ -20,7 +20,7 @@ class Item(SQLModel, table=True):
     catalog: str
     created_at: datetime = Field(default_factory=datetime.now)
 
-    orders: list["Order"] = Relationship(back_populates="items", link_model=ItemOrderLink)
+    # orders: list["Order"] = Relationship(back_populates="items", link_model=ItemOrderLink)
 
 
 class ItemAgent(BaseModel):
