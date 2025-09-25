@@ -5,9 +5,8 @@ from config.database import engine
 from model.item import Item
 
 items = [
-    # ---- CHALECO ----
     Item(
-        name="Chaleco",
+        name="D - Chaleco",
         code=678807,
         color="Beige",
         price=Decimal("49.90"),
@@ -15,7 +14,7 @@ items = [
         catalog="625635",
     ),
     Item(
-        name="Chaleco",
+        name="D - Chaleco",
         code=678808,
         color="Beige",
         price=Decimal("49.90"),
@@ -23,7 +22,7 @@ items = [
         catalog="625635",
     ),
     Item(
-        name="Chaleco",
+        name="D - Chaleco",
         code=678809,
         color="Beige",
         price=Decimal("49.90"),
@@ -31,7 +30,7 @@ items = [
         catalog="625635",
     ),
     Item(
-        name="Chaleco",
+        name="D - Chaleco",
         code=678810,
         color="Beige",
         price=Decimal("49.90"),
@@ -39,7 +38,7 @@ items = [
         catalog="625635",
     ),
     Item(
-        name="Chaleco",
+        name="D - Chaleco",
         code=678811,
         color="Beige",
         price=Decimal("49.90"),
@@ -47,7 +46,7 @@ items = [
         catalog="625635",
     ),
     Item(
-        name="Chaleco",
+        name="D - Chaleco",
         code=678812,
         color="Beige",
         price=Decimal("49.90"),
@@ -56,7 +55,7 @@ items = [
     ),
     # ---- PANTALÓN ----
     Item(
-        name="Pantalón",
+        name="E - Pantalon",
         code=678904,
         color="Beige",
         price=Decimal("79.90"),
@@ -64,7 +63,7 @@ items = [
         catalog="625636",
     ),
     Item(
-        name="Pantalón",
+        name="E - Pantalon",
         code=678905,
         color="Beige",
         price=Decimal("79.90"),
@@ -72,7 +71,7 @@ items = [
         catalog="625636",
     ),
     Item(
-        name="Pantalón",
+        name="E - Pantalon",
         code=678906,
         color="Beige",
         price=Decimal("79.90"),
@@ -80,7 +79,7 @@ items = [
         catalog="625636",
     ),
     Item(
-        name="Pantalón",
+        name="E - Pantalon",
         code=678907,
         color="Beige",
         price=Decimal("79.90"),
@@ -88,7 +87,7 @@ items = [
         catalog="625636",
     ),
     Item(
-        name="Pantalón",
+        name="E - Pantalon",
         code=678908,
         color="Beige",
         price=Decimal("79.90"),
@@ -96,7 +95,7 @@ items = [
         catalog="625636",
     ),
     Item(
-        name="Pantalón",
+        name="E - Pantalon",
         code=678909,
         color="Beige",
         price=Decimal("79.90"),

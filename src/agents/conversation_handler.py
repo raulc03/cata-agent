@@ -2,20 +2,25 @@ import os
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import SystemMessage
+from langgraph.checkpoint.memory import InMemorySaver
 
-from workflows.query_refiner import query_refiner_agent
+from prompts.conversation_handler import SYSTEM_PROMPT_V0
 from tools.item_validator import validate_item
+from tools.query_refiner import refine_requested_item
 
-_prompt = SystemMessage(
-    "You are a conversational agent who will talk to the customer to manage a sales order. "
-    "You will identify yourself as ‘Charito’ and don't say you're an assistant, just keep the conversation natural and friendly like the best sales agent. "
-    "And you only speak in spanish.",
-)
+from dotenv import load_dotenv
+
+load_dotenv()
+
+_prompt = SystemMessage(SYSTEM_PROMPT_V0)
 
 _model = init_chat_model(
-    model="anthropic:claude-3-7-sonnet-latest", api_key=os.getenv("API_KEY", ""), temperature=0.7
+    model="anthropic:claude-3-7-sonnet-latest", api_key=os.getenv("API_KEY", ""), temperature=0.5
 )
 
 conversation_agent = create_agent(
-    model=_model, tools=[query_refiner_agent, validate_item], prompt=_prompt
+    model=_model,
+    tools=[refine_requested_item, validate_item],
+    prompt=_prompt,
+    checkpointer=InMemorySaver(),
 )

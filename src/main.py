@@ -12,13 +12,15 @@ def main():
     if not existsDB:
         insert_items()
 
-    response = conversation_agent.invoke(
-        {
-            "messages": ("user", input("Qué desea comprar: ")),
-        }
-    )
+    while True:
+        response = conversation_agent.invoke(
+            {
+                "messages": [("user", input("Cliente: "))],
+            },
+            {"configurable": {"thread_id": "1"}},
+        )
 
-    print(response["messages"][-1].content)
+        response["messages"][-1].pretty_print()
 
 
 if __name__ == "__main__":
