@@ -5,7 +5,6 @@ from config.database import create_db_and_table
 from util.seed import insert_items
 
 
-# TODO: Agregar el agente de confirmación con memoria de los mensajes con el cliente
 def main():
     existsDB = Path("database.db").exists()
     create_db_and_table()

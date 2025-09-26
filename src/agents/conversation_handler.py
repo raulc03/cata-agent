@@ -5,12 +5,14 @@ from langchain_core.messages import SystemMessage
 from langgraph.checkpoint.memory import InMemorySaver
 
 from prompts.conversation_handler import SYSTEM_PROMPT_V0
-from tools.item_validator import validate_item
+from tools.create_order import create_order
+from tools.item_validator import CustomState, validate_item
 from tools.query_refiner import refine_requested_item
 
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 _prompt = SystemMessage(SYSTEM_PROMPT_V0)
 
@@ -20,7 +22,8 @@ _model = init_chat_model(
 
 conversation_agent = create_agent(
     model=_model,
-    tools=[refine_requested_item, validate_item],
+    tools=[refine_requested_item, validate_item, create_order],
     prompt=_prompt,
     checkpointer=InMemorySaver(),
+    state_schema=CustomState,
 )

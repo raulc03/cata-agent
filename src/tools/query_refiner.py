@@ -10,6 +10,8 @@ from pydantic import SecretStr
 from prompts.query_refiner import SYSTEM_PROMPT_V0
 
 
+# NOTE: Puede que se cambie la utilidad de la tool
+# para que el LLM la utilice para 'encontrar items en el catalogo'
 @tool(
     description="This tool is used to refine the values of an item in the customer's order according to the specified page. Only one purchase item will be refined at a time"
 )
