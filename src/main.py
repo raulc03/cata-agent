@@ -11,13 +11,26 @@ def main():
     if not existsDB:
         insert_items()
 
+    first_loop = True
+
     while True:
-        response = conversation_agent.invoke(
-            {
-                "messages": [("user", input("Cliente: "))],
-            },
-            {"configurable": {"thread_id": "1"}},
-        )
+        user_input = input("Cliente: ")
+        if first_loop:
+            response = conversation_agent.invoke(
+                {
+                    "messages": [("user", user_input)],  # type:ignore
+                    "items": {},  # type:ignore
+                },
+                {"configurable": {"thread_id": "1"}},
+            )
+            first_loop = False
+        else:
+            response = conversation_agent.invoke(
+                {
+                    "messages": [("user", user_input)],  # type:ignore
+                },
+                {"configurable": {"thread_id": "1"}},
+            )
 
         response["messages"][-1].pretty_print()
 

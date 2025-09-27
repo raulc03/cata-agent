@@ -2,8 +2,10 @@ from decimal import Decimal
 from typing import Annotated
 from langchain.agents.tool_node import InjectedState
 from langchain.tools import tool
-from sqlmodel import Session
+from sqlmodel import Session, select
 
+from model.item import Item
+from model.item_order_link import ItemOrderLink
 from model.order import Order
 from config.database import engine
 from tools.item_validator import CustomState
@@ -26,10 +28,12 @@ def create_order(state: Annotated[CustomState, InjectedState], total_price: Deci
     order = Order(total_price=total_price)
 
     with Session(engine) as session:
-        for item in state["items"]:
-            merged_item = session.merge(item)
-            merged_item.orders.append(order)
-            session.add(merged_item)
+        session.add(order)
+        for id, quantity in state["items"].items():
+            item = session.exec(select(Item).where(Item.id == id)).first()
+            if item:
+                new_item_order = ItemOrderLink(item=item, order=order, quantity=quantity)
+                session.add(new_item_order)
         session.commit()
         session.refresh(order)
 

@@ -1,6 +1,6 @@
-from operator import add
 from typing import Annotated
 from langchain.agents import AgentState
+from langchain.agents.tool_node import InjectedState
 from langchain_core import messages
 from langgraph.types import Command
 from sqlmodel import Session, select
@@ -12,7 +12,7 @@ from util import normalize_name
 
 
 class CustomState(AgentState):
-    items: Annotated[list[Item], add]
+    items: dict[int, int]
 
 
 @tool
@@ -20,6 +20,8 @@ def validate_item(
     name: str,
     color: str,
     size: str,
+    quantity: int,
+    state: Annotated[CustomState, InjectedState],
     tool_call_id: Annotated[str, InjectedToolCallId],
     code: str | None = None,
 ) -> Command:
@@ -40,10 +42,12 @@ def validate_item(
         )
     with Session(engine) as session:
         item = session.exec(stmt).first()
-        if item:
+        items_dict = state["items"]
+        if item and isinstance(item.id, int):
+            items_dict[item.id] = quantity
             return Command(
                 update={
-                    "items": [item],
+                    "items": items_dict,
                     "messages": [
                         messages.ToolMessage(str(item.model_dump()), tool_call_id=tool_call_id)
                     ],

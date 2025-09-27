@@ -2,12 +2,8 @@ from datetime import datetime
 from decimal import Decimal
 from sqlmodel import SQLModel, Field, Relationship
 from pydantic import BaseModel
-from typing import TYPE_CHECKING
 
 from model.item_order_link import ItemOrderLink
-
-if TYPE_CHECKING:
-    from model.order import Order
 
 
 class Item(SQLModel, table=True):
@@ -20,7 +16,7 @@ class Item(SQLModel, table=True):
     catalog: str
     created_at: datetime = Field(default_factory=datetime.now)
 
-    orders: list["Order"] = Relationship(back_populates="items", link_model=ItemOrderLink)
+    order_links: list[ItemOrderLink] = Relationship(back_populates="item")
 
 
 class ItemAgent(BaseModel):
